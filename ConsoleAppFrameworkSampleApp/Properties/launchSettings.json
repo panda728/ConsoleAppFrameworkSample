@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ConsoleAppFrameworkSampleApp": {
+      "commandName": "Project",
+      "commandLineArgs": "Base2.Hello -n TEST2"
+    }
+  }
+}
