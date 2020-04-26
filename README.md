@@ -112,11 +112,14 @@ namespace ConsoleAppFrameworkSampleApp {
         }  
     }  
 ```  
-  
-```console:exeを実行するときの引数で、実行するプログラムを指定します。  
+exeを実行するときは、引数で実行するプログラムを指定します。
+
+```console  
 ConsoleAppFrameworkSampleApp.exe Base1.Hello -t TEST  
 ```  
+
 以上で全部です。  
+
 以下で、各部を説明します。  
     
 ## Main部分  
