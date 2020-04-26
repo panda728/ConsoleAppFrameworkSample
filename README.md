@@ -190,7 +190,7 @@ private static IHostBuilder CreateHostBuilder(string[] args) =>
         });  
 ```  
 
-設定用クラスの例（appsetting.jsonと連動させます。）
+設定用クラスの例（appsetting.jsonの項目名と連動させます。）
 
 ```c#
 public class Settings {  
@@ -203,7 +203,8 @@ public class Settings {
 上記のコードで準備が整いましたので  
 実際の処理部分を記述します。  
   
-ConsoleAppFrameworkのサンプルにあるHelloメソッド相当の機能に、ロガーと設定情報クラスを追加すると、以下の形になります。  
+ConsoleAppFrameworkのサンプルにあるHelloメソッド相当の機能に   
+ロガーと設定情報クラスを追加すると、以下の形になります。  
   
 ```c#  
 public class Base1 : ConsoleAppBase {  
@@ -228,7 +229,7 @@ public class Base1 : ConsoleAppBase {
 コンストラクタでロガーと設定情報クラスを受け取ることができますが  
 この辺りはMicrosoft.Extensionsのお仕事  
   
-DIがよくわからなかったのですが  
+これまでDIがよくわからなかったのですが  
 　「コンストラクタで書いたものが勝手に降りてくる」  
 と思ったら、便利さがわかったつもりになりましたw  
   
@@ -290,8 +291,11 @@ Program.csはシンプルに保てます。
 従来の機能への影響を気にせず追加でき、共通機能はDIから受け取って使いまわせます。 
   
 クラスが増えても、コンストラクタを見れば  
-共通利用で使っているクラスが把握できるので安心です。
-同じ処理のコードが複数クラスに書いてある事態は、DIで回避できるでしょう。   
+共通利用で使っているクラスが把握できるので安心です。  
+
+同じ処理のコードやマスタデータガ複数クラスで必要になったら、DIに切り出す手が使えます。   
+
+なるべく見通しよいコード量でConsoleAppBaseを維持したいですね。
 
 ###余談  
 appsettings.jsonの実行時パス問題が発生した場合は以下参照  
