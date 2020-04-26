@@ -1,5 +1,5 @@
 # ConsoleAppFrameworkSample
-.NET Coreでコンソールアプリで以下の組み合わせた実装例です。 
+.NET Coreでコンソールアプリで以下を組み合わせた実装例です。 
 
 - ConsoleAppFramework
 - Serilog
