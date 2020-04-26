@@ -36,7 +36,7 @@ Install-Package Serilog.Enrichers.Thread
 ## 実装例  
 まずは結論からということでProgram.csとConsoleAppBaseの実装です。  
 
-Program.cs  
+[Program.cs](https://github.com/panda728/ConsoleAppFrameworkSample/blob/master/ConsoleAppFrameworkSampleApp/Program.cs)  
   
 ```c#
 using System;  
@@ -61,7 +61,7 @@ namespace ConsoleAppFrameworkSampleApp {
             }  
         }  
   
-        public static IHostBuilder CreateHostBuilder(string[] args) =>  
+        private static IHostBuilder CreateHostBuilder(string[] args) =>  
             Host.CreateDefaultBuilder(args)  
                 .UseSerilog()  
                 .ConfigureServices((hostContext, services) => {  
@@ -69,14 +69,14 @@ namespace ConsoleAppFrameworkSampleApp {
                         hostContext.Configuration.GetSection("Settings"));  
                 });  
   
-        public static ILogger CreateLogger() =>  
+        private static ILogger CreateLogger() =>  
             new LoggerConfiguration()  
                 .ReadFrom.Configuration(CreateBuilder().Build())  
                 .Enrich.FromLogContext()  
                 .WriteTo.Console()  
                 .CreateLogger();  
           
-        public static IConfigurationBuilder CreateBuilder() =>  
+        private static IConfigurationBuilder CreateBuilder() =>  
              new ConfigurationBuilder()  
                 .SetBasePath(Directory.GetCurrentDirectory())  
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)  
@@ -87,7 +87,7 @@ namespace ConsoleAppFrameworkSampleApp {
 ```  
 
 各機能の実装は&nbsp;ConsoleAppBase&nbsp;を継承して実装します  
-
+[Base1.cs](https://github.com/panda728/ConsoleAppFrameworkSample/blob/master/ConsoleAppFrameworkSampleApp/AppBase/Base1.cs)
 ```c#
     public class Base1 : ConsoleAppBase {  
         readonly ILogger logger;  
@@ -122,16 +122,16 @@ mainでは、ロガーを作成してConsoleAppFrameworkを起動します。
 なおロガーの細かい設定は後述  
   
 ```c#  
-        static async Task Main(string[] args) {  
-            Log.Logger = CreateLogger();  
-            try {  
-                await CreateHostBuilder(args).RunConsoleAppFrameworkAsync(args);  
-            } catch (Exception ex) {  
-                Log.Fatal(ex, "Host terminated unexpectedly");  
-            } finally {  
-                Log.CloseAndFlush();  
-            }  
-        }  
+static async Task Main(string[] args) {  
+    Log.Logger = CreateLogger();  
+    try {  
+        await CreateHostBuilder(args).RunConsoleAppFrameworkAsync(args);  
+    } catch (Exception ex) {  
+        Log.Fatal(ex, "Host terminated unexpectedly");  
+    } finally {  
+        Log.CloseAndFlush();  
+    }  
+}  
 ```  
   
   
@@ -143,20 +143,19 @@ appsettings.jsonから設定を読み込む処理は Serilog.Extensions.Hosting 
 https://github.com/serilog/serilog-extensions-hosting/blob/dev/samples/SimpleServiceSample/Program.cs  
   
 ```c#  
-  
-        public static ILogger CreateLogger() =>  
-            new LoggerConfiguration()  
-                .ReadFrom.Configuration(CreateBuilder().Build())  
-                .Enrich.FromLogContext()  
-                .WriteTo.Console()  
-                .CreateLogger();  
-          
-        public static IConfigurationBuilder CreateBuilder() =>  
-             new ConfigurationBuilder()  
-                .SetBasePath(Directory.GetCurrentDirectory())  
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)  
-                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)  
-                .AddEnvironmentVariables();  
+private static ILogger CreateLogger() =>  
+    new LoggerConfiguration()  
+        .ReadFrom.Configuration(CreateBuilder().Build())  
+        .Enrich.FromLogContext()  
+        .WriteTo.Console()  
+        .CreateLogger();  
+
+private static IConfigurationBuilder CreateBuilder() =>  
+     new ConfigurationBuilder()  
+        .SetBasePath(Directory.GetCurrentDirectory())  
+        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)  
+        .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)  
+        .AddEnvironmentVariables();  
 ```  
   
 余談ですが　appsettings.jsonについて。  
@@ -174,22 +173,22 @@ Host.CreateDefaultBuilderで設定している内容は
 機能が増えて共通的に使いたいものができたら、ここでいろいろ増やせばよさそうです。  
   
 ```c#  
-        public static IHostBuilder CreateHostBuilder(string[] args) =>  
-            Host.CreateDefaultBuilder(args)  
-                .UseSerilog()  
-                .ConfigureServices((hostContext, services) => {  
-                    services.Configure<Settings>(  
-                        hostContext.Configuration.GetSection("Settings"));  
-                });  
+private static IHostBuilder CreateHostBuilder(string[] args) =>  
+    Host.CreateDefaultBuilder(args)  
+        .UseSerilog()  
+        .ConfigureServices((hostContext, services) => {  
+            services.Configure<Settings>(  
+                hostContext.Configuration.GetSection("Settings"));  
+        });  
 ```  
 
 設定用クラスの例（appsetting.jsonと連動させます。）
 
 ```c#
-    public class Settings {  
-        public string Path { get; set; }  
-        public string ConnectionString { get; set; }  
-    }  
+public class Settings {  
+    public string Path { get; set; }  
+    public string ConnectionString { get; set; }  
+}  
 ```  
   
 ## ConsoleAppBaseの実装例  
@@ -199,23 +198,23 @@ Host.CreateDefaultBuilderで設定している内容は
 ConsoleAppFrameworkのサンプルにあるHelloメソッド相当の機能に、ロガーと設定情報クラスを追加すると、以下の形になります。  
   
 ```c#  
-    public class Base1 : ConsoleAppBase {  
-        readonly ILogger logger;  
-        readonly Settings settings;  
-  
-        public Base1(ILogger<Base1> logger, IOptions<Settings> settingsOp) {  
-            this.logger = logger;  
-            this.settings = settingsOp.Value;  
-        }  
-  
-        public void Hello(  
-       [Option("n", "name of send user.")]string name,  
-       [Option("r", "repeat count.")]int repeat = 3) {  
-            for (int i = 0; i < repeat; i++) {  
-                this.logger.LogInformation("Hello My ConsoleApp Base1 from {name} {path}", name, this.settings.Path);  
-            }  
+public class Base1 : ConsoleAppBase {  
+    readonly ILogger logger;  
+    readonly Settings settings;  
+
+    public Base1(ILogger<Base1> logger, IOptions<Settings> settingsOp) {  
+        this.logger = logger;  
+        this.settings = settingsOp.Value;  
+    }  
+
+    public void Hello(  
+   [Option("n", "name of send user.")]string name,  
+   [Option("r", "repeat count.")]int repeat = 3) {  
+        for (int i = 0; i < repeat; i++) {  
+            this.logger.LogInformation("Hello My ConsoleApp Base1 from {name} {path}", name, this.settings.Path);  
         }  
     }  
+}  
 ```  
   
 コンストラクタでロガーと設定情報クラスを受け取ることができますが  
@@ -227,7 +226,8 @@ DIがよくわからなかったのですが
   
 ## appsetting.jsonの例  
 設定クラスとSerilogの設定は以下の要領で  
-  
+
+[appsetting.json](https://github.com/panda728/ConsoleAppFrameworkSample/blob/master/ConsoleAppFrameworkSampleApp/appsettings.json)
 ```json  
 {  
   "Settings": {  
