@@ -1,7 +1,11 @@
 # ConsoleAppFrameworkSample
-.NET Coreでコンソールアプリを作るときの  
-ConsoleAppFramework＋Serilog＋Microsoft.Extensions＋appsettings.json  
-の組み合わせの実装例です。 
+.NET Coreでコンソールアプリで以下の組み合わせた実装例です。 
+
+- ConsoleAppFramework
+- Serilog
+- Microsoft.Extensions
+- appsettings.json  
+
 
 ```
 Install-Package ConsoleAppFramework
