@@ -9,7 +9,7 @@ using Serilog;
 
 namespace ConsoleAppFrameworkSampleApp {
     public class Program {
-        static async Task Main(string[] args) {
+        public static async Task Main(string[] args) {
             Log.Logger = CreateLogger();
             try {
                 await CreateHostBuilder(args).RunConsoleAppFrameworkAsync(args);
@@ -20,7 +20,7 @@ namespace ConsoleAppFrameworkSampleApp {
             }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
+        private static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .UseSerilog()
                 .ConfigureServices((hostContext, services) => {
@@ -28,14 +28,14 @@ namespace ConsoleAppFrameworkSampleApp {
                         hostContext.Configuration.GetSection("Settings"));
                 });
 
-        public static ILogger CreateLogger() =>
+        private static ILogger CreateLogger() =>
             new LoggerConfiguration()
                 .ReadFrom.Configuration(CreateBuilder().Build())
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
                 .CreateLogger();
-        
-        public static IConfigurationBuilder CreateBuilder() =>
+
+        private static IConfigurationBuilder CreateBuilder() =>
              new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
