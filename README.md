@@ -26,14 +26,13 @@ Install-Package Serilog.Enrichers.Thread
 機能追加が困難な時期がやってきました。  
   
 そこで、ConsoleAppFrameworkを導入してコードを整理しようと思います。  
+しかし、ログなどは Microsoft.Extensions の仕組みを使うようです。
+残念ながら Microsoft.Extensions 関連は素人なので、
+使い慣れたSerilogとの組み合わせ方法を探すのに苦労しました。
+ようやく形になってきたので記録します。
 
-機能ごとに別クラスにわけても、起動時引数で切り替えができます。  
-（コードの外側でコントロールするスタイルになるので、運用側にとっては幸せかも。）  
-  
-ログなどは Microsoft.Extensions の仕組みを使うようです。  
-
-残念ながら Microsoft.Extensions 関連は素人なので組み合わせ方法を探すのに苦労しました。  
-ネットで情報漁って、なんとか形が見えてきたので、まとめておきます。  
+（ConsoleAppFrameworkの機能の一部しか活用できていませんが、
+　最初の一歩として参考になれば幸いです）
   
 ## ConsoleAppFrameworkとは  
   
