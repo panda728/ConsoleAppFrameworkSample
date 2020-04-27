@@ -297,7 +297,7 @@ Program.csはシンプルに保てます。
 
 なるべく見通しよいコード量でConsoleAppBaseを維持したいですね。
 
-##余談  
+## 余談  
 appsettings.jsonの実行時パス問題が発生した場合は以下参照  
   
 How can I get my .NET Core 3 single file app to find the appsettings.json file?  
